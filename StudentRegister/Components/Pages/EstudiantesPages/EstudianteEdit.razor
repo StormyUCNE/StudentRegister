@@ -1,0 +1,102 @@
+﻿@page "/Estudiante/Edit/{EstudianteId:int}"
+@inject EstudiantesService estudiantesService
+@rendermode InteractiveServer
+@inject NavigationManager navigationManager
+@inject IToastService toastService
+<PageTitle>Editar</PageTitle>
+<EditForm Model="Estudiante" OnValidSubmit="Modificar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center d-flex justify-content-start align-items-center gap-5">
+                <a href="/Estudiante/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
+                <h5 class="card-title">Editar Estudiante</h5>
+            </div>
+
+            <div class="card-body">
+
+                @*EstudianteId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>EstudianteId</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Estudiante.EstudianteId" readonly></InputNumber>
+                </div>
+
+                @*Nombre*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="Estudiante.Nombres"></InputText>
+                    <ValidationMessage For="(() => Estudiante.Nombres)" />
+                </div>
+
+                @*Email*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Email</strong></label>
+                    <InputText class="form-control" @bind-Value="Estudiante.Email"></InputText>
+                    <ValidationMessage For="(() => Estudiante.Email)" />
+                </div>
+
+                @*Edad*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Edad</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Estudiante.Edad"></InputNumber>
+                    <ValidationMessage For="(() => Estudiante.Edad)" />
+                </div>
+            </div>
+            <div class="card-footer text-center mt-2 d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="Eliminar">
+                    <i class="bi bi-trash"></i>
+                    Eliminar
+                </button>
+                <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center gap-2"><i class="bi bi-floppy"></i><span>Guardar</span></button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+@code {
+    [Parameter]
+    public int EstudianteId { get; set; }
+
+    public Estudiantes Estudiante { get; set; } = new Estudiantes();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Estudiante = await estudiantesService.Buscar(EstudianteId);
+    }
+
+    private async Task Modificar()
+    {
+        if (await estudiantesService.ExisteDuplicado(Estudiante))
+        {
+            toastService.ShowError("El Estudiante ya Existe, No se Admiten Duplicados");
+            return;
+        }
+        var creado = await estudiantesService.Guardar(Estudiante);
+        if (creado)
+        {
+            toastService.ShowSuccess("Estudiante Modificado Correctamente");
+            navigationManager.NavigateTo("/Estudiante/Index");
+        }
+        else
+        {
+            toastService.ShowError("Estudiante No Pudo Ser Modificado Correctamente");
+            navigationManager.NavigateTo("/Estudiante/Index");
+        }
+    }
+    private async Task Eliminar()
+    {
+        var eliminado = await estudiantesService.Eliminar(Estudiante.EstudianteId);
+
+        if (eliminado)
+        {
+            toastService.ShowSuccess("Estudiante Eliminado Correctamente");
+            navigationManager.NavigateTo("/Estudiante/Index");
+        }
+        else
+        {
+            toastService.ShowError("Estudiante No Pudo Ser Eliminado Correctamente");
+        }
+    }
+
+}

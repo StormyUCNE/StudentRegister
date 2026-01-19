@@ -1,0 +1,83 @@
+﻿@page "/Estudiante/Create"
+@inject EstudiantesService estudiantesService
+@inject NavigationManager navigationManager
+@rendermode InteractiveServer
+@inject IToastService toastService
+
+<PageTitle>Create</PageTitle>
+<EditForm Model="Estudiante" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator/>
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title">Crear Estudiante</h5>
+            </div>
+
+            <div class="card-body">
+
+                @*EstudianteId*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>EstudianteId</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Estudiante.EstudianteId" readonly></InputNumber>
+                </div>
+
+                @*Nombres*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="Estudiante.Nombres"></InputText>
+                    <ValidationMessage For="(()=> Estudiante.Nombres)"/>
+                </div>
+
+                @*Email*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Email</strong></label>
+                    <InputText class="form-control" @bind-Value="Estudiante.Email"></InputText>
+                    <ValidationMessage For="(() => Estudiante.Email)" />
+                </div>
+
+                @*Edad*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Edad</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Estudiante.Edad"></InputNumber>
+                    <ValidationMessage For="(() => Estudiante.Edad)" />
+                </div>
+            </div>
+            <div class="card-footer text-center mt-2 d-flex justify-content-center g-3">
+                <a href="/Estudiante/Index" class="btn btn-secondary d-flex align-items-center gap-2 me-3">
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Volver</span>
+                </a>
+
+                <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+                    <i class="bi bi-floppy"></i>
+                    <span>Guardar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+@code {
+    public Estudiantes Estudiante { get; set; } = new Estudiantes();
+
+    public async Task Guardar()
+    {   
+        if (await estudiantesService.ExisteDuplicado(Estudiante))
+        {
+            toastService.ShowError("El Estudiante ya Existe, No se Admiten Duplicados");
+            return;
+        }
+        var creado = await estudiantesService.Guardar(Estudiante);
+        if (creado)
+        {
+            toastService.ShowSuccess("Estudiante Guardado Correctamente");
+            navigationManager.NavigateTo("/Estudiante/Index");
+        }
+        else
+        {
+            toastService.ShowError("No se Pudo Guardar el Estudiante Correctamente");
+            navigationManager.NavigateTo("/Estudiante/Index");
+        }
+    }
+}
