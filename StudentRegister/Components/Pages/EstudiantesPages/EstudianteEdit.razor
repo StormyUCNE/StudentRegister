@@ -6,11 +6,9 @@
 <PageTitle>Editar</PageTitle>
 <EditForm Model="Estudiante" OnValidSubmit="Modificar">
     <DataAnnotationsValidator />
-
     <div class="container">
         <div class="card shadow-lg">
-            <div class="card-header text-center d-flex justify-content-start align-items-center gap-5">
-                <a href="/Estudiante/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
+            <div class="card-header text-center">
                 <h5 class="card-title">Editar Estudiante</h5>
             </div>
 
@@ -44,6 +42,7 @@
                 </div>
             </div>
             <div class="card-footer text-center mt-2 d-flex justify-content-center gap-3">
+                <a href="/Estudiante/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
                 <button type="button" class="btn btn-outline-danger btn-sm" @onclick="Eliminar">
                     <i class="bi bi-trash"></i>
                     Eliminar
