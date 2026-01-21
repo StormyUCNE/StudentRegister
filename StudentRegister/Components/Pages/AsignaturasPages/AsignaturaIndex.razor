@@ -98,7 +98,11 @@
         if (Filtro != "")
         {
             if (Filtro == "Codigo")
-                ListaAsignaturas = await asignaturasService.Listar(a => a.Codigo == int.Parse(ValorFiltro));
+            {
+                if(int.TryParse(ValorFiltro, out int valorEntero))
+                    ListaAsignaturas = await asignaturasService.Listar(a => a.Codigo == valorEntero); 
+                else ListaAsignaturas = await asignaturasService.Listar(a => a.AsignaturaId > 0);
+            }
             else if (Filtro == "Nombre")
                 ListaAsignaturas = await asignaturasService.Listar(a => a.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
             else if (Filtro == "Aula")
