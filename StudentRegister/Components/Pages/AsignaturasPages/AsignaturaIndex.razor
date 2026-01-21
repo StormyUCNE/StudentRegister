@@ -1,0 +1,112 @@
+﻿@page "/Asignatura/Index"
+@inject NavigationManager navigationManager
+@inject AsignaturasService asignaturasService
+@rendermode InteractiveServer
+
+<PageTitle>Registro de Asignaturas</PageTitle>
+<div class="container">
+    <div class="card shadow-lg ">
+        <div class="card-header d-flex gap-3 justify-content-between align-items-center">
+            <h5 class="card-title">Registro de Asignaturas</h5>
+            <a href="/Asignatura/Create" class="btn btn-primary d-flex align-items-center gap-2">
+                <i class="bi bi-plus-square"></i>
+                <span>Crear</span>
+            </a>
+        </div>
+        <div class="card-body">
+            @* labels *@
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Filtrar por</label>
+                </div>
+
+                <div class="col-md-8">
+                    <label class="form-label">Búsqueda</label>
+                </div>
+            </div>
+
+            @*Inputs y Botones*@
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <select class="form-select" @bind="Filtro">
+                        <option value="">Elija una opción</option>
+                        <option value="Codigo">Código Asignatura</option>
+                        <option value="Nombre">Nombre</option>
+                        <option value="Aula">Aula</option>
+                    </select>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar" @bind="ValorFiltro">
+                        <button type="button" class="btn btn-outline-primary" @onclick="Buscar">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            @*Tabla*@
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>AsignaturaId</th>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Aula</th>
+                        <th>Crédito</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in ListaAsignaturas)
+                    {
+                        <tr>
+                            <td>@a.AsignaturaId</td>
+                            <td>@a.Codigo</td>
+                            <td>@a.Nombre</td>
+                            <th>@a.Aula</th>
+                            <th>@a.Credito</th>
+                            <td>
+                                <a href="/Estudiante/Edit/@a.AsignaturaId" class="btn btn-outline-primary btn-sm me-1">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <label>Cantidad: @ListaAsignaturas.Count()</label>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Asignaturas> ListaAsignaturas = new List<Asignaturas>();
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaAsignaturas = await asignaturasService.Listar(a => a.AsignaturaId > 0);
+    }
+
+    private async Task Buscar()
+    {
+        if (Filtro != "")
+        {
+            if (Filtro == "Codigo")
+                ListaAsignaturas = await asignaturasService.Listar(a => a.Codigo == int.Parse(ValorFiltro));
+            else if (Filtro == "Nombre")
+                ListaAsignaturas = await asignaturasService.Listar(a => a.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
+            else if (Filtro == "Aula")
+                ListaAsignaturas = await asignaturasService.Listar(a => a.Aula.ToLower().Contains(ValorFiltro.ToLower()));
+        }
+        else
+        {
+            ListaAsignaturas = await asignaturasService.Listar(a => a.AsignaturaId > 0);
+        }
+    }
+}
