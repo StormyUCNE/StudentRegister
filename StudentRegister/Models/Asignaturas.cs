@@ -3,7 +3,7 @@ namespace StudentRegister.Models;
 public class Asignaturas
 {
     [Key]
-    public int AsignaturaID { get; set; }
+    public int AsignaturaId { get; set; }
 
     [Required(ErrorMessage = "Campo Obligatorio")]
     [Range(1, int.MaxValue, ErrorMessage = "No Se Aceptan Números Negativos")]
