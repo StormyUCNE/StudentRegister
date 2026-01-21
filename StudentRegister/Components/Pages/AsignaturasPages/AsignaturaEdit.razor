@@ -1,4 +1,4 @@
-﻿@page "/Asignatura/Edit/{AsignaturaId: int}"
+﻿@page "/Asignatura/Edit/{AsignaturaId:int}"
 @inject AsignaturasService asignaturasService
 @rendermode InteractiveServer
 @inject NavigationManager navigationManager
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="card-footer text-center mt-2 d-flex justify-content-center gap-3">
-                <a href="/Estudiante/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
+                <a href="/Asignatura/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
                 <button type="button" class="btn btn-outline-danger btn-sm" @onclick="Eliminar">
                     <i class="bi bi-trash"></i>
                     Eliminar
