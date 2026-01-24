@@ -55,7 +55,7 @@
 @code {
     public Estudiantes Estudiante { get; set; } = new Estudiantes();
 
-    public async Task Guardar()
+    private async Task Guardar()
     {   
         if (await estudiantesService.ExisteDuplicado(Estudiante))
         {
