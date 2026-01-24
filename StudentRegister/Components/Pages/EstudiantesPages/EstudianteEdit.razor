@@ -85,7 +85,6 @@
     <div class="modal-backdrop fade show"></div>
 }
 
-
 @code {
     [Parameter]
     public int EstudianteId { get; set; }
@@ -118,6 +117,7 @@
             navigationManager.NavigateTo("/Estudiante/Index");
         }
     }
+
     private async Task Eliminar()
     {
         var eliminado = await estudiantesService.Eliminar(Estudiante.EstudianteId);
@@ -143,5 +143,4 @@
         MostrarModalEliminar = false;
         await Eliminar();
     }
-
 }
