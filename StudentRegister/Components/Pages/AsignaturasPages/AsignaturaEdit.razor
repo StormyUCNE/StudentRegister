@@ -51,7 +51,7 @@
             </div>
             <div class="card-footer text-center mt-2 d-flex justify-content-center gap-3">
                 <a href="/Asignatura/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
-                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="Eliminar">
+                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="()=> MostrarModalEliminar = true">
                     <i class="bi bi-trash"></i>
                     Eliminar
                 </button>
@@ -61,11 +61,46 @@
     </div>
 
 </EditForm>
+
+@if (MostrarModalEliminar)
+{
+    <div class="modal fade show modal-confirmation" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-flex align-items-center gap-2">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>Confirmación de Eliminar</span>
+                </div>
+
+                <div class="modal-body">
+                    ¿Desea eliminar la Asignatura de
+                    <span class="badge bg-warning text-dark">
+                        @Asignatura.Nombre
+                    </span>?
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CerrarModal">
+                        Cancelar
+                    </button>
+                    <button class="btn btn-danger" @onclick="Eliminar">
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop fade show"></div>
+}
+
 @code {
     [Parameter]
     public int AsignaturaId { get; set; }
 
     public Asignaturas Asignatura { get; set; } = new Asignaturas();
+
+    public bool MostrarModalEliminar = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -104,5 +139,16 @@
         {
             toastService.ShowError("Asignatura No Pudo Ser Eliminada Correctamente");
         }
+    }
+
+    private void CerrarModal()
+    {
+        MostrarModalEliminar = false;
+    }
+
+    private async Task ConfirmarEliminar()
+    {
+        MostrarModalEliminar = false;
+        await Eliminar();
     }
 }
