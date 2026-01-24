@@ -61,7 +61,7 @@
 @code {
     public Asignaturas Asignatura { get; set; } = new Asignaturas();
 
-    public async Task Guardar()
+    private async Task Guardar()
     {
         if (await asignaturasService.ExisteDuplicado(Asignatura))
         {
