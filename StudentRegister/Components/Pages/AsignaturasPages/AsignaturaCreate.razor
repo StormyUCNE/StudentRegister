@@ -15,15 +15,9 @@
 
             <div class="card-body">
 
-                @*AsignaturaId*@
-                <div class="mb-3">
-                    <label class="form-label"><strong>AsignaturaId</strong></label>
-                    <InputNumber class="form-control" @bind-Value="Asignatura.AsignaturaId" readonly></InputNumber>
-                </div>
-
                 @*Codigo Asignatura*@
                 <div class="mb-3">
-                    <label class="form-label"><strong>Codigo</strong></label>
+                    <label class="form-label"><strong>Código</strong></label>
                     <InputNumber class="form-control" @bind-Value="Asignatura.Codigo"></InputNumber>
                     <ValidationMessage For="(() => Asignatura.Codigo)" />
                 </div>
