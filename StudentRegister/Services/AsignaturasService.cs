@@ -30,7 +30,7 @@ public class AsignaturasService(IDbContextFactory<Contexto> DbFactory)
     public async Task<bool> ExisteDuplicado(Asignaturas asignatura)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.Asignaturas.AnyAsync(a => (a.Codigo == asignatura.Codigo || a.Nombre == asignatura.Nombre) && a.AsignaturaId != asignatura.AsignaturaId);
+        return await contexto.Asignaturas.AnyAsync(a => a.Nombre == asignatura.Nombre && a.AsignaturaId != asignatura.AsignaturaId);
     }
 
     private async Task<bool> Modificar(Asignaturas asignatura)
