@@ -43,11 +43,11 @@
             </div>
             <div class="card-footer text-center mt-2 d-flex justify-content-center gap-3">
                 <a href="/Estudiante/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
+                <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center gap-2"><i class="bi bi-floppy"></i><span>Modificar</span></button>
                 <button type="button" class="btn btn-outline-danger btn-sm" @onclick="Eliminar">
                     <i class="bi bi-trash"></i>
                     Eliminar
                 </button>
-                <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center gap-2"><i class="bi bi-floppy"></i><span>Guardar</span></button>
             </div>
         </div>
     </div>
@@ -86,16 +86,13 @@
     private async Task Eliminar()
     {
         var eliminado = await estudiantesService.Eliminar(Estudiante.EstudianteId);
-
         if (eliminado)
         {
             toastService.ShowSuccess("Estudiante Eliminado Correctamente");
             navigationManager.NavigateTo("/Estudiante/Index");
         }
         else
-        {
             toastService.ShowError("Estudiante No Pudo Ser Eliminado Correctamente");
-        }
     }
 
 }
