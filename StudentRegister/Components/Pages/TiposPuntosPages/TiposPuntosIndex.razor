@@ -8,7 +8,7 @@
     <div class="card">
         <div class="card-header">
             <div class="card-title d-flex justify-content-between align-items-center">
-                <label>Registro de Tipos de Puntos</label>
+                <h5>Registro de Tipos de Puntos</h5>
                 <a href="/TiposPuntos/Create" class="btn btn-primary g-2">
                     <i class="bi bi-plus"></i>
                     <span>Crear</span>
@@ -18,18 +18,18 @@
 
         <div class="card-body">
             <div class="row">
-                <div class="col-4">
+                <div class="col-12 col-md-4">
                     <label class="form-label fw-bold">Buscar Por</label>
                     <select class="form-select" @bind="Filtro">
-                        <option>Elija una Opción</option>
+                        <option value="">Elija una Opción</option>
                         <option value="Nombre">Nombre</option>
                         <option value="Valor Puntos">Valor Puntos</option>
                     </select>
                 </div>
-                <div class="col-8">
+                <div class="col-12 col-md-8">
                     <label class="form-label fw-bold">Buscar</label>
                     <div class="input-group">
-                        <input class="form-control" placeholder="Buscar" @bind="FiltroValor" />
+                        <input type="text" class="form-control" placeholder="Buscar" @bind="ValorFiltro" />
                         <button type="button" class="bi bi-search btn btn-primary" @onclick="Buscar"></button>
                     </div>
                  
@@ -59,9 +59,9 @@
                                 <td>@p.Nombre</td>
                                 <td>@p.Descricion</td>
                                 <td>@p.ValorPuntos</td>
-                                <td style="background-color:@(p.Color)"></td>
+                                <td style="color:@p.Color; font-weight:bold;">@p.Color</td>
                                 <td class="d-flex justify-content-center align-items-center"><i class="@p.Icono"></i></td>
-                                <td>@(p.Activo ? "Sí" : "No")</td>
+                                <td><span class="@(p.Activo ? "text-bg-primary p-2" : "text-bg-danger p-2")">@(p.Activo ? "Activado" : "Desactivado")</span></td>
                                 <td>
                                     <a href="/TiposPuntos/Edit/@p.TipoId" class="btn btn-outline-primary btn-sm me-1">
                                         <i class="bi bi-pencil"></i>
@@ -69,7 +69,6 @@
                                 </td>
                             </tr>
                         }
-
                     </tbody>
                 </table>
             </div>
@@ -84,9 +83,8 @@
 
 @code {
     public List<TiposPuntos> ListaTipoPuntos = new List<TiposPuntos>();
-
     public string Filtro { get; set; } = string.Empty;
-    public string FiltroValor { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,13 +93,13 @@
 
     private async Task Buscar()
     {
-        if(FiltroValor != "")
+        if (ValorFiltro.Trim() != "")
         {
             if (Filtro == "Nombre")
-                ListaTipoPuntos = await tiposPuntosService.Listar(p => p.Nombre.ToLower().Contains(FiltroValor.ToLower()));
+                ListaTipoPuntos = await tiposPuntosService.Listar(p => p.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
             if (Filtro == "Valor Puntos")
             {
-                if (int.TryParse(FiltroValor, out int FiltroValorEntero))
+                if (int.TryParse(ValorFiltro, out int FiltroValorEntero))
                     ListaTipoPuntos = await tiposPuntosService.Listar(p => p.ValorPuntos == FiltroValorEntero);
                 else
                     ListaTipoPuntos = await tiposPuntosService.Listar(p => p.TipoId > 0);
@@ -110,5 +108,4 @@
         else 
             ListaTipoPuntos = await tiposPuntosService.Listar(p => p.TipoId > 0);
     }
-
 }

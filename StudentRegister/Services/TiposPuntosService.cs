@@ -18,16 +18,16 @@ public class TiposPuntosService(IDbContextFactory<Contexto> DbFactory)
         await using var contexto = await DbFactory.CreateDbContextAsync();
         return await contexto.TiposPuntos.AnyAsync(p => p.TipoId == tipoPuntoId);
     }
-    public async Task<bool> ExisteDuplicado(TiposPuntos tipoPunto)
-    {
-        await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.TiposPuntos.AnyAsync(p => p.Nombre == tipoPunto.Nombre && p.TipoId != tipoPunto.TipoId);
-    }
     private async Task<bool> Insertar(TiposPuntos tipoPunto)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
         contexto.TiposPuntos.Add(tipoPunto);
         return await contexto.SaveChangesAsync() > 0;
+    }
+    public async Task<bool> ExisteDuplicado(TiposPuntos tipoPunto)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.TiposPuntos.AnyAsync(p => p.Nombre == tipoPunto.Nombre && p.TipoId != tipoPunto.TipoId);
     }
     private async Task<bool> Modificar(TiposPuntos tipoPunto)
     {
@@ -35,10 +35,15 @@ public class TiposPuntosService(IDbContextFactory<Contexto> DbFactory)
         contexto.TiposPuntos.Update(tipoPunto);
         return await contexto.SaveChangesAsync() > 0;
     }
+    public async Task<bool> Eliminar(int tiposPuntoID)
+    {
+        await using var contexto = await DbFactory.CreateDbContextAsync();
+        return await contexto.TiposPuntos.AsNoTracking().Where(p => p.TipoId == tiposPuntoID).ExecuteDeleteAsync() > 0;
+    }
     public async Task<TiposPuntos?> Buscar(int tipoPuntoId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
-        return await contexto.TiposPuntos.AsNoTracking().FirstOrDefaultAsync(p => p.TipoId == tipoPuntoId);
+        return await contexto.TiposPuntos.FirstOrDefaultAsync(p => p.TipoId == tipoPuntoId);
     }
     public async Task<List<TiposPuntos>> Listar(Expression<Func<TiposPuntos, bool>> criterio)
     {

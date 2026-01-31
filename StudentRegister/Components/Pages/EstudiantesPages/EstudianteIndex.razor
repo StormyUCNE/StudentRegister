@@ -85,6 +85,7 @@
     public List<Estudiantes> ListaEstudiantes { get; set; } = new List<Estudiantes>();
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         ListaEstudiantes = await estudiantesService.Listar(e => e.EstudianteId > 0);
