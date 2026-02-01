@@ -1,43 +1,51 @@
-﻿@page "/Estudiante/Edit/{EstudianteId:int}"
-@inject EstudiantesService estudiantesService
+﻿@page "/Asignatura/Edit/{AsignaturaId:int}"
+@inject AsignaturasService asignaturasService
 @rendermode InteractiveServer
 @inject NavigationManager navigationManager
 @inject IToastService toastService
+
 <PageTitle>Editar</PageTitle>
-<EditForm Model="Estudiante" OnValidSubmit="Modificar">
+<EditForm Model="Asignatura" OnValidSubmit="Modificar">
     <DataAnnotationsValidator />
     <div class="container">
         <div class="card shadow-lg">
             <div class="card-header text-center">
-                <h5 class="card-title">Editar Estudiante</h5>
+                <h5 class="card-title">Editar Asignatura</h5>
             </div>
 
             <div class="card-body">
 
+                @*Codigo Asignatura*@
+                <div class="mb-3">
+                    <label class="form-label"><strong>Código</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Asignatura.Codigo"></InputNumber>
+                    <ValidationMessage For="(() => Asignatura.Codigo)" />
+                </div>
+
                 @*Nombre*@
                 <div class="mb-3">
                     <label class="form-label"><strong>Nombre</strong></label>
-                    <InputText class="form-control" @bind-Value="Estudiante.Nombres"></InputText>
-                    <ValidationMessage For="(() => Estudiante.Nombres)" />
+                    <InputText class="form-control" @bind-Value="Asignatura.Nombre"></InputText>
+                    <ValidationMessage For="(() => Asignatura.Nombre)" />
                 </div>
 
-                @*Email*@
+                @*Aula*@
                 <div class="mb-3">
-                    <label class="form-label"><strong>Email</strong></label>
-                    <InputText class="form-control" @bind-Value="Estudiante.Email"></InputText>
-                    <ValidationMessage For="(() => Estudiante.Email)" />
+                    <label class="form-label"><strong>Aula</strong></label>
+                    <InputText class="form-control" @bind-Value="Asignatura.Aula"></InputText>
+                    <ValidationMessage For="(() => Asignatura.Aula)" />
                 </div>
 
-                @*Edad*@
+                @*Créditos*@
                 <div class="mb-3">
-                    <label class="form-label"><strong>Edad</strong></label>
-                    <InputNumber class="form-control" @bind-Value="Estudiante.Edad"></InputNumber>
-                    <ValidationMessage For="(() => Estudiante.Edad)" />
+                    <label class="form-label"><strong>Créditos</strong></label>
+                    <InputNumber class="form-control" @bind-Value="Asignatura.Credito"></InputNumber>
+                    <ValidationMessage For="(() => Asignatura.Credito)" />
                 </div>
             </div>
             <div class="card-footer text-center mt-2 d-flex justify-content-center gap-3">
-                <a href="/Estudiante/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
-                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="() => MostrarModalEliminar = true">
+                <a href="/Asignatura/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
+                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="()=> MostrarModalEliminar = true">
                     <i class="bi bi-trash"></i>
                     Eliminar
                 </button>
@@ -45,6 +53,7 @@
             </div>
         </div>
     </div>
+
 </EditForm>
 
 @if (MostrarModalEliminar)
@@ -58,9 +67,9 @@
                 </div>
 
                 <div class="modal-body">
-                    ¿Desea eliminar el estudiante
+                    ¿Desea eliminar la Asignatura de
                     <span class="badge bg-warning text-dark">
-                        @Estudiante.Nombres
+                        @Asignatura.Nombre
                     </span>?
                 </div>
 
@@ -81,49 +90,48 @@
 
 @code {
     [Parameter]
-    public int EstudianteId { get; set; }
+    public int AsignaturaId { get; set; }
 
-    private bool MostrarModalEliminar = false;
+    public Asignaturas Asignatura { get; set; } = new Asignaturas();
 
-    public Estudiantes Estudiante { get; set; } = new Estudiantes();
+    public bool MostrarModalEliminar = false;
 
     protected override async Task OnInitializedAsync()
     {
-        Estudiante = await estudiantesService.Buscar(EstudianteId);
+        Asignatura = await asignaturasService.Buscar(AsignaturaId);
     }
 
     private async Task Modificar()
     {
-        if (await estudiantesService.ExisteDuplicado(Estudiante))
+        if (await asignaturasService.ExisteDuplicado(Asignatura))
         {
-            toastService.ShowError("El Estudiante ya Existe, No se Admiten Duplicados");
+            toastService.ShowError("La Asignatura ya Existe, No se Admiten Duplicados");
             return;
         }
-        var creado = await estudiantesService.Guardar(Estudiante);
+        var creado = await asignaturasService.Guardar(Asignatura);
         if (creado)
         {
-            toastService.ShowSuccess("Estudiante Modificado Correctamente");
-            navigationManager.NavigateTo("/Estudiante/Index");
+            toastService.ShowSuccess("Asignatura Modificada Correctamente");
+            navigationManager.NavigateTo("/Asignatura/Index");
         }
         else
         {
-            toastService.ShowError("Estudiante No Pudo Ser Modificado Correctamente");
-            navigationManager.NavigateTo("/Estudiante/Index");
+            toastService.ShowError("Asignatura No Pudo Ser Modificada Correctamente");
+            navigationManager.NavigateTo("/Asignatura/Index");
         }
     }
-
     private async Task Eliminar()
     {
-        var eliminado = await estudiantesService.Eliminar(Estudiante.EstudianteId);
+        var eliminado = await asignaturasService.Eliminar(Asignatura.AsignaturaId);
 
         if (eliminado)
         {
-            toastService.ShowSuccess("Estudiante Eliminado Correctamente");
-            navigationManager.NavigateTo("/Estudiante/Index");
+            toastService.ShowSuccess("Asignatura Eliminada Correctamente");
+            navigationManager.NavigateTo("/Asignatura/Index");
         }
         else
         {
-            toastService.ShowError("Estudiante No Pudo Ser Eliminado Correctamente");
+            toastService.ShowError("Asignatura No Pudo Ser Eliminada Correctamente");
         }
     }
 
