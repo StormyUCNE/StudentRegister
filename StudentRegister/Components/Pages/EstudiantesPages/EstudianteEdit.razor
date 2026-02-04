@@ -13,7 +13,6 @@
             </div>
 
             <div class="card-body">
-
                 @*Nombre*@
                 <div class="mb-3">
                     <label class="form-label"><strong>Nombre</strong></label>
@@ -37,12 +36,8 @@
             </div>
             <div class="card-footer text-center mt-2 d-flex justify-content-center gap-3">
                 <a href="/Estudiante/Index" class="btn btn-secondary"><span class="bi bi-arrow-left">Volver</span></a>
-                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="() => MostrarModalEliminar = true">
-                <button type="submit" class="btn btn-primary d-flex justify-content-center align-items-center gap-2"><i class="bi bi-floppy"></i><span>Modificar</span></button>
-                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="Eliminar">
-                    <i class="bi bi-trash"></i>
-                    Eliminar
-                </button>
+                <button type="button" class="btn btn-primary btn-sm" @onclick="Modificar">Modificar</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="() => MostrarModalEliminar = true">Eliminar</button>
             </div>
         </div>
     </div>
@@ -57,14 +52,12 @@
                     <i class="bi bi-exclamation-triangle-fill"></i>
                     <span>Confirmación de Eliminar</span>
                 </div>
-
                 <div class="modal-body">
                     ¿Desea eliminar el estudiante
                     <span class="badge bg-warning text-dark">
                         @Estudiante.Nombres
                     </span>?
                 </div>
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" @onclick="CerrarModal">
                         Cancelar
@@ -76,7 +69,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal-backdrop fade show"></div>
 }
 
@@ -123,13 +115,10 @@
         }
         else
             toastService.ShowError("Estudiante No Pudo Ser Eliminado Correctamente");
-        }
     }
-
     private void CerrarModal()
     {
         MostrarModalEliminar = false;
-    }
     }
 
     private async Task ConfirmarEliminar()
