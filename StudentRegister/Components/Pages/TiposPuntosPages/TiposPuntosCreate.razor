@@ -17,27 +17,36 @@
             </div>
 
             <div class="card-body">
+                @*Nombre*@
                 <div class="mb-2">
                     <label class="form-label">Nombre</label>
                     <InputText class="form-control" @bind-Value="TiposPuntos.Nombre"></InputText>
-                    <ValidationMessage For="()=> TiposPuntos.Nombre"/>
+                    <ValidationMessage For="() => TiposPuntos.Nombre" />
                 </div>
+
+                @*Decripción*@
                 <div class="mb-2">
                     <label class="form-label">Decripción</label>
                     <InputText class="form-control" @bind-Value="TiposPuntos.Descricion"></InputText>
-                    <ValidationMessage For="() => TiposPuntos.Descricion"/>
+                    <ValidationMessage For="() => TiposPuntos.Descricion" />
                 </div>
+
+                @*Valor Punto*@
                 <div class="mb-2">
                     <label class="form-label">Valor Punto</label>
                     <InputNumber class="form-control" @bind-Value="TiposPuntos.ValorPuntos"></InputNumber>
                     <ValidationMessage For="() => TiposPuntos.ValorPuntos" />
                 </div>
+
+                @*Color*@
                 <div class="mb-2 d-flex flex-column">
                     <label class="form-label">Color</label>
                     <InputText type="color" class="form-control-color" @bind-Value="TiposPuntos.Color"></InputText>
                     <ValidationMessage For="() => TiposPuntos.Color" />
                 </div>
-                <div class="mb-2 ">
+
+                @*Icono*@
+                <div class="mb-2">
                     <label class="form-label">Icono</label>
                     <InputSelect class="form-select" @bind-Value="TiposPuntos.Icono">
                         <option value="">Seleccione</option>
@@ -47,6 +56,8 @@
                     </InputSelect>
                     <ValidationMessage For="() => TiposPuntos.Icono" />
                 </div>
+
+                @*Activo*@
                 <div class="mb-2 ">
                     <label class="form-label">Activo</label>
                     <InputSelect class="form-select" TValue="bool" @bind-Value="TiposPuntos.Activo">
