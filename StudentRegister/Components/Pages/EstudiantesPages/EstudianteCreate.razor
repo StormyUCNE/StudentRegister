@@ -16,12 +16,6 @@
 
             <div class="card-body">
 
-                @*EstudianteId*@
-                <div class="mb-3">
-                    <label class="form-label"><strong>EstudianteId</strong></label>
-                    <InputNumber class="form-control" @bind-Value="Estudiante.EstudianteId" readonly></InputNumber>
-                </div>
-
                 @*Nombres*@
                 <div class="mb-3">
                     <label class="form-label"><strong>Nombre</strong></label>
@@ -61,7 +55,7 @@
 @code {
     public Estudiantes Estudiante { get; set; } = new Estudiantes();
 
-    public async Task Guardar()
+    private async Task Guardar()
     {   
         if (await estudiantesService.ExisteDuplicado(Estudiante))
         {
