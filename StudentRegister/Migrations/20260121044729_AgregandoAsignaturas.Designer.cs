@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentRegister.DAL;
 
@@ -10,9 +11,11 @@ using StudentRegister.DAL;
 namespace StudentRegister.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20260121044729_AgregandoAsignaturas")]
+    partial class AgregandoAsignaturas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,41 +73,6 @@ namespace StudentRegister.Migrations
                     b.HasKey("EstudianteId");
 
                     b.ToTable("Estudiantes");
-                });
-
-            modelBuilder.Entity("StudentRegister.Models.TiposPuntos", b =>
-                {
-                    b.Property<int>("TipoId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TipoId"));
-
-                    b.Property<bool>("Activo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Descricion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Icono")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ValorPuntos")
-                        .HasColumnType("int");
-
-                    b.HasKey("TipoId");
-
-                    b.ToTable("TiposPuntos");
                 });
 #pragma warning restore 612, 618
         }

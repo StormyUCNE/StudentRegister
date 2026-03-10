@@ -1,0 +1,174 @@
+﻿@page "/TiposPuntos/Edit/{TipoId:int}"
+@inject TiposPuntosService tiposPuntosService
+@rendermode InteractiveServer
+@inject IToastService toastService
+@inject NavigationManager navigationManager
+
+<PageTitle>Editar Tipo Punto</PageTitle>
+
+<EditForm Model="TiposPuntos" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title m-auto d-flex justify-content-center align-items-center">
+                    <label class="fs-4">Editar Tipo Punto</label>
+                </div>
+            </div>
+ 
+            <div class="card-body">
+                @*Nombre*@
+                <div class="mb-2">
+                    <label class="form-label">Nombre</label>
+                    <InputText class="form-control" @bind-Value="TiposPuntos.Nombre"></InputText>
+                    <ValidationMessage For="() => TiposPuntos.Nombre" />
+                </div>
+
+                @*Decripción*@
+                <div class="mb-2">
+                    <label class="form-label">Decripción</label>
+                    <InputText class="form-control" @bind-Value="TiposPuntos.Descricion"></InputText>
+                    <ValidationMessage For="() => TiposPuntos.Descricion" />
+                </div>
+
+                @*Valor Punto*@
+                <div class="mb-2">
+                    <label class="form-label">Valor Punto</label>
+                    <InputNumber class="form-control" @bind-Value="TiposPuntos.ValorPuntos"></InputNumber>
+                    <ValidationMessage For="() => TiposPuntos.ValorPuntos" />
+                </div>
+
+                @*Color*@
+                <div class="mb-2 d-flex flex-column">
+                    <label class="form-label">Color</label>
+                    <InputText type="color" class="form-control-color" @bind-Value="TiposPuntos.Color"></InputText>
+                    <ValidationMessage For="() => TiposPuntos.Color" />
+                </div>
+
+                @*Icono*@
+                <div class="mb-2">
+                    <label class="form-label">Icono</label>
+                    <InputSelect class="form-select" @bind-Value="TiposPuntos.Icono">
+                        <option value="">Seleccione</option>
+                        <option value="bi bi-star">Estrella</option>
+                        <option value="bi bi-trophy">Trofeo</option>
+                        <option value="bi bi-award">Medalla</option>
+                    </InputSelect>
+                    <ValidationMessage For="() => TiposPuntos.Icono" />
+                </div>
+
+                @*Activo*@
+                <div class="mb-2 ">
+                    <label class="form-label">Activo</label>
+                    <InputSelect class="form-select" TValue="bool" @bind-Value="TiposPuntos.Activo">
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                    </InputSelect>
+                    <ValidationMessage For="() => TiposPuntos.Activo" />
+                </div>
+            </div>
+
+            <div class="card-footer text-center mt-2 d-flex justify-content-center gap-3">
+                <a href="/TiposPuntos/Index" class="btn btn-secondary d-flex align-items-center gap-2">
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Volver</span>
+                </a>
+                <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+                    <i class="bi bi-floppy"></i>
+                    <span>Modificar</span>
+                </button>
+                <button type="button" class="btn btn-outline-danger" @onclick="()=> MostrarModalEliminar = true">
+                    <i class="bi bi-trash"></i>
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@if (MostrarModalEliminar)
+{
+    <div class="modal fade show modal-confirmation" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header d-flex align-items-center gap-2">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span>Confirmación de Eliminar</span>
+                </div>
+
+                <div class="modal-body">
+                    ¿Desea eliminar la Asignatura de
+                    <span class="badge bg-warning text-dark">
+                        @TiposPuntos.Nombre
+                    </span>?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CerrarModal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="Eliminar">
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+@code {
+    [Parameter]
+    public int TipoId { get; set; }
+
+    public TiposPuntos TiposPuntos = new TiposPuntos();
+
+    public bool MostrarModalEliminar = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TiposPuntos = await tiposPuntosService.Buscar(TipoId);
+    }
+
+    private async Task Guardar()
+    {
+        if (await tiposPuntosService.ExisteDuplicado(TiposPuntos))
+        {
+            toastService.ShowError("El Tipo de Punto ya Existe, No se Admiten Duplicados");
+            return;
+        }
+        var creado = await tiposPuntosService.Guardar(TiposPuntos);
+        if (creado)
+        {
+            toastService.ShowSuccess("Tipo de Punto Guardado Correctamente");
+            navigationManager.NavigateTo("/TiposPuntos/Index");
+        }
+        else
+        {
+            toastService.ShowError("No se Pudo Guardar el Tipo de Punto Correctamente");
+            navigationManager.NavigateTo("/TiposPuntos/Index");
+        }
+    }
+
+    private async Task Eliminar()
+    {
+        var eliminado = await tiposPuntosService.Eliminar(TiposPuntos.TipoId);
+        if (eliminado)
+        {
+            toastService.ShowSuccess("Tipo Punto Eliminado Correctamente");
+            navigationManager.NavigateTo("/TiposPuntos/Index");
+        }
+        else
+            toastService.ShowError("Tipo Punto No Pudo Ser Eliminado Correctamente");
+    }
+
+    private void CerrarModal()
+    {
+        MostrarModalEliminar = false;
+    }
+
+    private async Task ConfirmarEliminar()
+    {
+        MostrarModalEliminar = false;
+        await Eliminar();
+    }
+}

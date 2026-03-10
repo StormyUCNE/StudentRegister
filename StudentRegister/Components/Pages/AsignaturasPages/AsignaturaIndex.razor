@@ -1,15 +1,14 @@
-﻿@page "/"
-@page "/Estudiante/Index"
+﻿@page "/Asignatura/Index"
 @inject NavigationManager navigationManager
-@inject EstudiantesService estudiantesService
+@inject AsignaturasService asignaturasService
 @rendermode InteractiveServer
 
-<PageTitle>Registro de Estudiantes</PageTitle>
+<PageTitle>Registro de Asignaturas</PageTitle>
 <div class="container">
     <div class="card shadow-lg ">
         <div class="card-header d-flex gap-3 justify-content-between align-items-center">
-            <h5 class="card-title">Registro de Estudiantes</h5>
-            <a href="/Estudiante/Create" class="btn btn-primary d-flex align-items-center gap-2">
+            <h5 class="card-title">Registro de Asignaturas</h5>
+            <a href="/Asignatura/Create" class="btn btn-primary d-flex align-items-center gap-2">
                 <i class="bi bi-plus-square"></i>
                 <span>Crear</span>
             </a>
@@ -30,8 +29,9 @@
                 <div class="col-md-4">
                     <select class="form-select" @bind="Filtro">
                         <option value="">Elija una opción</option>
+                        <option value="Codigo">Código Asignatura</option>
                         <option value="Nombre">Nombre</option>
-                        <option value="Email">Email</option>
+                        <option value="Aula">Aula</option>
                     </select>
                 </div>
 
@@ -49,23 +49,25 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>EstudianteId</th>
-                        <th>Nombres</th>
-                        <th>Email</th>
-                        <th>Edad</th>
+                        <th>AsignaturaId</th>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Aula</th>
+                        <th>Créditos</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var e in ListaEstudiantes)
+                    @foreach (var a in ListaAsignaturas)
                     {
                         <tr>
-                            <td>@e.EstudianteId</td>
-                            <td>@e.Nombres</td>
-                            <td>@e.Email</td>
-                            <th>@e.Edad</th>
+                            <td>@a.AsignaturaId</td>
+                            <td>@a.Codigo</td>
+                            <td>@a.Nombre</td>
+                            <th>@a.Aula</th>
+                            <th>@a.Credito</th>
                             <td>
-                                <a href="/Estudiante/Edit/@e.EstudianteId" class="btn btn-outline-primary btn-sm me-1">
+                                <a href="/Asignatura/Edit/@a.AsignaturaId" class="btn btn-outline-primary btn-sm me-1">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                             </td>
@@ -75,31 +77,39 @@
             </table>
         </div>
         <div class="card-footer">
-            <label>Cantidad: @ListaEstudiantes.Count()</label>
+            <label>Cantidad: @ListaAsignaturas.Count()</label>
         </div>
     </div>
-
 </div>
+
 @code {
-    public List<Estudiantes> ListaEstudiantes { get; set; } = new List<Estudiantes>();
+    public List<Asignaturas> ListaAsignaturas = new List<Asignaturas>();
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        ListaEstudiantes = await estudiantesService.Listar(e => e.EstudianteId > 0);
+        ListaAsignaturas = await asignaturasService.Listar(a => a.AsignaturaId > 0);
     }
 
     private async Task Buscar()
     {
-        if(ValorFiltro.Trim() != "")
+        if (ValorFiltro.Trim() != "")
         {
-            if (Filtro == "Nombre")
-                ListaEstudiantes = await estudiantesService.Listar(e => e.Nombres.ToLower().Contains(ValorFiltro.ToLower()));
-            else if (Filtro == "Email")
-                ListaEstudiantes = await estudiantesService.Listar(e => e.Email.ToLower().Contains(ValorFiltro.ToLower()));
+            if (Filtro == "Codigo")
+            {
+                if(int.TryParse(ValorFiltro, out int valorEntero))
+                    ListaAsignaturas = await asignaturasService.Listar(a => a.Codigo == valorEntero); 
+                else ListaAsignaturas = await asignaturasService.Listar(a => a.AsignaturaId > 0);
+            }
+            else if (Filtro == "Nombre")
+                ListaAsignaturas = await asignaturasService.Listar(a => a.Nombre.ToLower().Contains(ValorFiltro.ToLower()));
+            else if (Filtro == "Aula")
+                ListaAsignaturas = await asignaturasService.Listar(a => a.Aula.ToLower().Contains(ValorFiltro.ToLower()));
         }
         else
-            ListaEstudiantes = await estudiantesService.Listar(e => e.EstudianteId > 0);
+        {
+            ListaAsignaturas = await asignaturasService.Listar(a => a.AsignaturaId > 0);
+        }
     }
 }

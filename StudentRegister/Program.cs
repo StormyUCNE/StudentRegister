@@ -14,6 +14,9 @@ var ConStr = builder.Configuration.GetConnectionString("SqlConStr");
 builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlServer(ConStr));
 
 builder.Services.AddScoped<EstudiantesService>();
+builder.Services.AddScoped<AsignaturasService>();
+
+builder.Services.AddScoped<TiposPuntosService>();
 
 builder.Services.AddBlazoredToast();
 

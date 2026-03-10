@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentRegister.DAL;
 
@@ -10,9 +11,11 @@ using StudentRegister.DAL;
 namespace StudentRegister.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20260131023503_TiposPuntos")]
+    partial class TiposPuntos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,33 +23,6 @@ namespace StudentRegister.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("StudentRegister.Models.Asignaturas", b =>
-                {
-                    b.Property<int>("AsignaturaId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AsignaturaId"));
-
-                    b.Property<string>("Aula")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Codigo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Credito")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AsignaturaId");
-
-                    b.ToTable("Asignaturas");
-                });
 
             modelBuilder.Entity("StudentRegister.Models.Estudiantes", b =>
                 {

@@ -13,7 +13,6 @@ public class EstudiantesService(IDbContextFactory<Contexto> DbFactory)
         else
             return await Modificar(estudiante);
     }
-
     private async Task<bool> Existe(int estudianteId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
@@ -26,32 +25,27 @@ public class EstudiantesService(IDbContextFactory<Contexto> DbFactory)
         contexto.Estudiantes.Add(estudiante);
         return await contexto.SaveChangesAsync() > 0;
     }
-
     public async Task<bool> ExisteDuplicado(Estudiantes estudiante)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
         return await contexto.Estudiantes.AnyAsync(e => e.Nombres == estudiante.Nombres && e.EstudianteId != estudiante.EstudianteId);
     }
-
     private async Task<bool> Modificar(Estudiantes estudiante)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
         contexto.Estudiantes.Update(estudiante);
         return await contexto.SaveChangesAsync() > 0;
     }
-
     public async Task<bool> Eliminar(int estudianteId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
         return await contexto.Estudiantes.AsNoTracking().Where(e => e.EstudianteId == estudianteId).ExecuteDeleteAsync() > 0;
     }
-
     public async Task<Estudiantes?> Buscar(int estudianteId)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
         return await contexto.Estudiantes.FirstOrDefaultAsync(e => e.EstudianteId == estudianteId);
     }
-
     public async Task<List<Estudiantes>> Listar(Expression<Func<Estudiantes, bool>> criterio)
     {
         await using var contexto = await DbFactory.CreateDbContextAsync();
